@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f3f4f6; margin: 0; padding: 24px; color: #222; }
+        .container { max-width: 600px; margin: 20px auto; background: white; padding: 28px; border-radius: 12px; box-shadow: 0 4px 15px #0001; }
+        h1 { text-align: center; color: #4338ca; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, select { width: 100%; padding: 11px; margin-top: 6px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; }
+        button, .btn { display: inline-block; border: 0; background: #4338ca; color: white; padding: 12px 16px; border-radius: 6px; cursor: pointer; text-decoration: none; margin-top: 18px; }
+        .btn-secondary { background: #4b5563; }
+        .nav { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+        .message { padding: 12px; margin: 12px 0; border-radius: 6px; background: #e0f2fe; }
+        .error { background: #fee2e2; }
+        .success { background: #dcfce7; }
+        .muted { color: #555; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Appointment Booking</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% if booked %}
+        <div class="message success">Appointment booked successfully!</div>
+    {% endif %}
+
+    {% if user_name %}
+        <p>Welcome, <strong>{{ user_name }}</strong>!</p>
+        <div class="nav">
+            <a class="btn" href="{{ url_for('patient_dashboard') }}">My Dashboard</a>
+            <form method="POST" action="{{ url_for('patient_logout') }}">
+                <button class="btn-secondary" type="submit">Logout</button>
+            </form>
+        </div>
+
+        <h2>Book an Appointment</h2>
+        <form method="POST" action="{{ url_for('book') }}">
+            
+            
+<label for="phone">Phone Number</label>
+<input
+    id="phone"
+    type="text"
+    name="phone"
+    inputmode="numeric"
+    autocomplete="tel"
+    maxlength="10"
+    placeholder="Enter 10-digit phone number"
+    required
+>
+
+            <label for="service">Select Service</label>
+            <select id="service" name="service" required>
+                <option value="">Choose a service</option>
+                <option value="General Consultation">General Consultation</option>
+                <option value="Follow-up">Follow-up</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="date">Appointment Date</label>
+            <input id="date" type="date" name="date" required>
+
+            <label for="time">Appointment Time</label>
+            <input id="time" type="time" name="time" required>
+
+            <button type="submit">Book Appointment</button>
+        </form>
+    {% else %}
+        <p class="muted">Register or log in to book and manage your appointments.</p>
+        <div class="nav">
+            <a class="btn" href="{{ url_for('register') }}">Create Account</a>
+            <a class="btn btn-secondary" href="{{ url_for('patient_login') }}">Patient Login</a>
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

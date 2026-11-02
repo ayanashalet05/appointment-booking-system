@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Login</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f3f4f6; padding: 24px; }
+        .box { max-width: 440px; margin: 50px auto; background: white; padding: 28px; border-radius: 12px; box-shadow: 0 4px 15px #0001; }
+        h1 { color: #4338ca; text-align: center; }
+        label { display: block; margin-top: 16px; font-weight: bold; }
+        input { width: 100%; padding: 11px; margin-top: 6px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 6px; }
+        button { width: 100%; margin-top: 22px; padding: 12px; background: #4338ca; color: white; border: 0; border-radius: 6px; cursor: pointer; }
+        .message { padding: 10px; background: #fee2e2; border-radius: 6px; margin: 10px 0; }
+        .success { background: #dcfce7; }
+        p { text-align: center; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>Patient Login</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% if error %}
+        <div class="message">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('patient_login') }}">
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email"
+               autocomplete="email" required>
+
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password"
+               autocomplete="current-password" required>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+    <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+</div>
+</body>
+</html>

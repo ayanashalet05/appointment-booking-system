@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f3f4f6; margin: 0; padding: 24px; color: #222; }
+        .container { max-width: 1050px; margin: auto; }
+        header { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .card { background: white; padding: 22px; margin: 20px 0; border-radius: 12px; box-shadow: 0 4px 15px #0001; }
+        h1, h2 { color: #4338ca; }
+        .btn, button { background: #4338ca; color: white; padding: 11px 15px; border: 0; border-radius: 6px; text-decoration: none; cursor: pointer; }
+        .logout { background: #4b5563; }
+        .message { padding: 12px; background: #e0f2fe; border-radius: 6px; margin: 12px 0; }
+        .error { background: #fee2e2; }
+        .success { background: #dcfce7; }
+        .appointment { border: 1px solid #ddd; padding: 15px; margin: 12px 0; border-radius: 8px; }
+        .empty { color: #666; }
+        @media (max-width: 600px) { body { padding: 12px; } .card { padding: 14px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div>
+            <h1>My Dashboard</h1>
+            <p>Welcome, <strong>{{ user_name }}</strong>!</p>
+        </div>
+        <div>
+            <a class="btn" href="#book-appointment">Book Appointment</a>
+            <form method="POST" action="{{ url_for('patient_logout') }}" style="display:inline">
+                <button class="logout" type="submit">Logout</button>
+            </form>
+        </div>
+    </header>
+    
+<section class="card" id="book-appointment">
+    <h2>Book a New Appointment</h2>
+
+    <form method="POST" action="{{ url_for('book_appointment') }}">
+        <label for="service">Select Service</label><br>
+        <select id="service" name="service" required
+                style="width:100%;padding:12px;margin:8px 0 16px;">
+            <option value="">-- Choose a service --</option>
+            <option value="General Consultation">General Consultation</option>
+            <option value="Dental Consultation">Dental Consultation</option>
+            <option value="Eye Consultation">Eye Consultation</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="phone">Phone Number</label><br>
+        <input type="tel" id="phone" name="phone"
+               pattern="[0-9]{10}" maxlength="10"
+               placeholder="10-digit phone number" required
+               style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 16px;">
+
+        <label for="appointment_date">Appointment Date</label><br>
+        <input type="date" id="appointment_date" name="appointment_date"
+               required
+               style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 16px;">
+
+        <label for="appointment_time">Appointment Time</label><br>
+        <input type="time" id="appointment_time" name="appointment_time"
+               required
+               style="width:100%;box-sizing:border-box;padding:12px;margin:8px 0 16px;">
+
+        <button type="submit">Confirm Booking</button>
+    </form>
+</section>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="card">
+        <h2>Upcoming Appointments</h2>
+        {% if upcoming %}
+            {% for appointment in upcoming %}
+                <div class="appointment">
+                    <strong>{{ appointment.service }}</strong>
+                    <p>Appointment ID: {{ appointment.id }}</p>
+                    <p>Date: {{ appointment.date.strftime('%d-%m-%Y') }}</p>
+                    <p>Time: {{ appointment.time.strftime('%I:%M %p') }}</p>
+                    <p>Phone: {{ appointment.phone }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty">You have no upcoming appointments.</p>
+        {% endif %}
+    </section>
+
+    <section class="card">
+        <h2>Previous Appointment History</h2>
+        {% if history %}
+            {% for appointment in history %}
+                <div class="appointment">
+                    <strong>{{ appointment.service }}</strong>
+                    <p>Appointment ID: {{ appointment.id }}</p>
+                    <p>Date: {{ appointment.date.strftime('%d-%m-%Y') }}</p>
+                    <p>Time: {{ appointment.time.strftime('%I:%M %p') }}</p>
+                    <p>Phone: {{ appointment.phone }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty">No previous appointments yet.</p>
+        {% endif %}
+    </section>
+</div>
+</body>
+</html>

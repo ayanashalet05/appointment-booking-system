@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f3ff;
+            margin: 0;
+            padding: 30px 15px;
+            color: #292943;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .top-bar h1 {
+            color: #5145cd;
+            margin: 0 0 8px;
+        }
+
+        .top-bar p {
+            margin: 0;
+            color: #555;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px #00000010;
+        }
+
+        .summary {
+            background: #5b4be0;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .summary h2 {
+            color: white;
+            margin-top: 0;
+        }
+
+        .count {
+            font-size: 42px;
+            font-weight: bold;
+            margin: 12px;
+        }
+
+        .logout-button {
+            background: #c0392b;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .logout-button:hover {
+            background: #a93226;
+        }
+
+        h2 {
+            color: #5145cd;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #5145cd;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f6f6fc;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .top-bar {
+                align-items: flex-start;
+            }
+
+            .card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <header class="top-bar">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Appointment Booking System overview</p>
+            </div>
+
+            <form action="/admin/logout" method="POST">
+                <button class="logout-button" type="submit">
+                    Logout
+                </button>
+            </form>
+        </header>
+
+        <section class="card">
+            <div class="summary">
+                <h2>Total Appointments</h2>
+                <div class="count">{{ total_appointments }}</div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>All Appointments</h2>
+
+            {% if appointments %}
+            <div class="table-wrapper">
+                
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for appointment in appointments %}
+        <tr>
+            <td>{{ appointment.id }}</td>
+            <td>{{ appointment.name }}</td>
+            <td>{{ appointment.email }}</td>
+            <td>{{ appointment.phone }}</td>
+            <td>{{ appointment.service }}</td>
+            <td>{{ appointment.date.strftime('%d-%m-%Y') }}</td>
+            <td>{{ appointment.time.strftime('%I:%M %p') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="7">No appointments found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+            </div>
+            {% else %}
+                <p class="empty">No appointments found.</p>
+            {% endif %}
+        </section>
+
+    </div>
+</body>
+</html>
